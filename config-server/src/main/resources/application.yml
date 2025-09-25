@@ -9,9 +9,25 @@ spring:
       server:
         git:
           uri: file://${user.home}/ecommerce-config-repo
+        # Enable encryption/decryption
+        encrypt:
+          enabled: true
+  # Security configuration to disable basic auth (we only need crypto functions)
+  security:
+    user:
+      name: admin
+      password: admin123
+      roles: ACTUATOR
+
+# Encryption key - In production, use environment variable or external key management
+encrypt:
+  key: ecommerce-hub-secret-key-2024
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,env
+        include: health,info,metrics,env,encrypt,decrypt
+  endpoint:
+    health:
+      show-details: always
