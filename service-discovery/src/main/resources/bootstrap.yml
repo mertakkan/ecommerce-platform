@@ -1,0 +1,20 @@
+# Bootstrap configuration loads before application.yml
+# It's used to configure how to connect to the Config Server
+
+spring:
+  application:
+    name: eureka-server  # This name is used to fetch configuration from Config Server
+  cloud:
+    config:
+      uri: http://localhost:8888  # Config Server location
+      username: admin
+      password: admin123
+      fail-fast: true  # Fail startup if Config Server is unavailable
+      retry:
+        max-attempts: 5
+        initial-interval: 2000
+        multiplier: 1.5
+        max-interval: 5000
+
+# Note: bootstrap.yml is required for Spring Cloud Config Client
+# It runs in a separate, earlier phase of the application lifecycle

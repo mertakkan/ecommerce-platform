@@ -3,250 +3,250 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <!-- Parent Project Identification -->
-  <groupId>com.ecommercehub</groupId>
-  <artifactId>ecommerce-platform</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
+    <!-- Parent Project Identification -->
+    <groupId>com.ecommercehub</groupId>
+    <artifactId>ecommerce-platform</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <name>EcommerceHub Platform</name>
-  <description>Enterprise E-Commerce Microservices Platform</description>
+    <name>EcommerceHub Platform</name>
+    <description>Enterprise E-Commerce Microservices Platform</description>
 
-  <modules>
-    <!-- Infrastructure Services -->
-    <module>config-server</module>
-    <module>service-discovery</module>
-    <module>api-gateway</module>
+    <modules>
+        <!-- Infrastructure Services -->
+        <module>config-server</module>
+        <module>service-discovery</module>
+        <module>api-gateway</module>
 
-    <!-- Common Libraries -->
-    <module>common-dto</module>
-    <module>common-security</module>
-    <module>common-utils</module>
+        <!-- Common Libraries -->
+        <module>common-dto</module>
+        <module>common-security</module>
+        <module>common-utils</module>
 
-    <!-- Business Services -->
-    <module>user-service</module>
-    <module>product-service</module>
-    <module>inventory-service</module>
-    <module>cart-service</module>
-    <module>order-service</module>
-    <module>payment-service</module>
-    <module>notification-service</module>
-    <module>review-service</module>
-    <module>search-service</module>
-  </modules>
+        <!-- Business Services -->
+        <module>user-service</module>
+        <module>product-service</module>
+        <module>inventory-service</module>
+        <module>cart-service</module>
+        <module>order-service</module>
+        <module>payment-service</module>
+        <module>notification-service</module>
+        <module>review-service</module>
+        <module>search-service</module>
+    </modules>
 
-  <!-- Properties for Version Management -->
-  <properties>
-    <!-- Java Version -->
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Properties for Version Management -->
+    <properties>
+        <!-- Java Version -->
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Spring Boot & Cloud Versions -->
-    <spring-boot.version>3.3.4</spring-boot.version>
-    <spring-cloud.version>2023.0.2</spring-cloud.version>
+        <!-- Spring Boot & Cloud Versions -->
+        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
 
-    <!-- Database Versions -->
-    <postgresql.version>42.7.8</postgresql.version>
-    <mongodb.version>5.6.0</mongodb.version>
-    <redis.version>6.2.0</redis.version>
+        <!-- Database Versions -->
+        <postgresql.version>42.7.8</postgresql.version>
+        <mongodb.version>5.6.0</mongodb.version>
+        <redis.version>6.2.0</redis.version>
 
-    <!-- Other Dependencies -->
-    <lombok.version>1.18.42</lombok.version>
-    <mapstruct.version>1.6.3</mapstruct.version>
-    <junit.version>5.10.2</junit.version>
-    <mockito.version>5.20.0</mockito.version>
-    <testcontainers.version>1.21.3</testcontainers.version>
+        <!-- Other Dependencies -->
+        <lombok.version>1.18.42</lombok.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <junit.version>5.10.2</junit.version>
+        <mockito.version>5.20.0</mockito.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
 
-    <!-- Build Plugins -->
-    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-    <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
-  </properties>
+        <!-- Build Plugins -->
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+    </properties>
 
-  <!-- Dependency Management - Versions defined here, inherited by child modules -->
-  <dependencyManagement>
-    <dependencies>
-      <!-- Spring Boot BOM (Bill of Materials) -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+    <!-- Dependency Management - Versions defined here, inherited by child modules -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot BOM (Bill of Materials) -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-      <!-- Spring Cloud BOM -->
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring-cloud.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+            <!-- Spring Cloud BOM -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-      <!-- Database Dependencies -->
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${postgresql.version}</version>
-      </dependency>
+            <!-- Database Dependencies -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.mongodb</groupId>
-        <artifactId>mongodb-driver-sync</artifactId>
-        <version>${mongodb.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongodb.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>redis.clients</groupId>
-        <artifactId>jedis</artifactId>
-        <version>${redis.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
 
-      <!-- Utility Libraries -->
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct</artifactId>
-        <version>${mapstruct.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct-processor</artifactId>
-        <version>${mapstruct.version}</version>
-      </dependency>
-
-      <!-- Testing Dependencies -->
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers-bom</artifactId>
-        <version>${testcontainers.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <!-- Internal Modules -->
-      <dependency>
-        <groupId>com.ecommercehub</groupId>
-        <artifactId>common-dto</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.ecommercehub</groupId>
-        <artifactId>common-security</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.ecommercehub</groupId>
-        <artifactId>common-utils</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <!-- Build Configuration -->
-  <build>
-    <pluginManagement>
-
-
-      <plugins>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>versions-maven-plugin</artifactId>
-          <version>2.16.2</version>
-        </plugin>
-        <!-- Spring Boot Maven Plugin -->
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${spring-boot.version}</version>
-          <configuration>
-            <excludes>
-              <exclude>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-              </exclude>
-            </excludes>
-          </configuration>
-        </plugin>
-
-        <!-- Maven Compiler Plugin -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven-compiler-plugin.version}</version>
-          <configuration>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
-            <annotationProcessorPaths>
-              <path>
+            <!-- Utility Libraries -->
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
-              </path>
-              <path>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapstruct.version}</version>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
+            </dependency>
 
-        <!-- Surefire Plugin for Tests -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven-surefire-plugin.version}</version>
-        </plugin>
+            <!-- Testing Dependencies -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
 
-        <!-- JaCoCo for Code Coverage -->
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${jacoco-maven-plugin.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>report</id>
-              <phase>test</phase>
-              <goals>
-                <goal>report</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Internal Modules -->
+            <dependency>
+                <groupId>com.ecommercehub</groupId>
+                <artifactId>common-dto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ecommercehub</groupId>
+                <artifactId>common-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ecommercehub</groupId>
+                <artifactId>common-utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Build Configuration -->
+    <build>
+        <pluginManagement>
+
+
+            <plugins>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.16.2</version>
+                </plugin>
+                <!-- Spring Boot Maven Plugin -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <!-- Maven Compiler Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapstruct.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- Surefire Plugin for Tests -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+
+                <!-- JaCoCo for Code Coverage -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

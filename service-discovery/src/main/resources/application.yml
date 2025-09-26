@@ -1,0 +1,82 @@
+# Local configuration (can be overridden by Config Server)
+
+server:
+  port: 8761  # Standard Eureka port
+
+spring:
+  application:
+    name: eureka-server
+
+# Eureka Server Configuration
+eureka:
+  instance:
+    hostname: localhost
+    # In AWS/Cloud environments, set preferIpAddress: true
+    preferIpAddress: false
+
+    # Health check configuration
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info
+
+  client:
+    # Eureka Server doesn't register with itself in standalone mode
+    registerWithEureka: false
+    fetchRegistry: false
+
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+  server:
+    # Self-preservation mode prevents Eureka from removing instances
+    # when network partitions occur
+    enableSelfPreservation: true
+
+    # Expected client renewal percentage
+    renewalPercentThreshold: 0.85
+
+    # How often to check for expired leases
+    evictionIntervalTimerInMs: 60000
+
+    # Response cache configuration
+    responseCacheUpdateIntervalMs: 30000
+
+    # Peer node configuration (for HA setup)
+    waitTimeInMsWhenSyncEmpty: 0
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,loggers
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true  # Enable liveness and readiness probes
+  health:
+    diskspace:
+      enabled: true
+      threshold: 10MB
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    com.netflix.eureka: INFO
+    com.netflix.discovery: INFO
+    com.ecommercehub.discovery: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/eureka-server.log
+    max-size: 10MB
+    max-history: 30
