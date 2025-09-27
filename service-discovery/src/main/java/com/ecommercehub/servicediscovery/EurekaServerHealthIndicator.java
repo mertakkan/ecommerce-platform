@@ -7,7 +7,6 @@ import com.netflix.eureka.registry.PeerAwareInstanceRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.Status;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,19 +15,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Custom Health Indicator for Eureka Server
+ * Custom Health Indicator for Eureka Server Registry Details
  * <p>
  * This provides detailed health information about the Eureka Server including:
  * - Number of registered services
  * - Status of each registered service
  * - Registry statistics
  * <p>
- * This is crucial for monitoring in production environments where you need
- * to know not just if Eureka is running, but what services are registered.
+ * Note: This is separate from Spring Cloud's built-in eurekaHealthIndicator
+ * which focuses on Eureka client functionality.
  */
 @Slf4j
-@Component
-public class EurekaHealthIndicator implements HealthIndicator {
+@Component("eurekaServerHealthIndicator")  // Explicit bean name to avoid conflict
+public class EurekaServerHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
@@ -37,8 +36,9 @@ public class EurekaHealthIndicator implements HealthIndicator {
             EurekaServerContext context = EurekaServerContextHolder.getInstance().getServerContext();
 
             if (context == null) {
-                return Health.down()
-                        .withDetail("reason", "EurekaServerContext is not initialized")
+                return Health.up()  // Changed from down to up during startup
+                        .withDetail("status", "initializing")
+                        .withDetail("reason", "EurekaServerContext is not yet initialized")
                         .build();
             }
 
@@ -70,16 +70,15 @@ public class EurekaHealthIndicator implements HealthIndicator {
             // Add registry metrics
             details.put("numberOfRenewsPerMin", registry.getNumOfRenewsPerMinThreshold());
             details.put("isSelfPreservationModeEnabled", registry.isSelfPreservationModeEnabled());
+            details.put("status", "running");
 
-            // Determine health status
-            Status status = totalInstances > 0 ? Status.UP : Status.OUT_OF_SERVICE;
-
-            return Health.status(status)
+            // For an empty registry (normal at startup), still consider it UP
+            return Health.up()
                     .withDetails(details)
                     .build();
 
         } catch (Exception e) {
-            log.error("Error checking Eureka health", e);
+            log.error("Error checking Eureka server health", e);
             return Health.down()
                     .withDetail("error", e.getMessage())
                     .build();
