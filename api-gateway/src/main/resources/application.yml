@@ -1,0 +1,132 @@
+# Server Configuration
+server:
+  port: 8080
+
+# Spring Configuration
+spring:
+  application:
+    name: api-gateway
+
+  # Config Server Configuration
+  config:
+    import: "configserver:http://localhost:8888"
+
+  # Redis Configuration for Rate Limiting (Updated for Spring Boot 3.x)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+
+  # Cloud Gateway Configuration
+  cloud:
+    gateway:
+      # Global CORS Configuration
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000"  # React frontend
+              - "http://localhost:4200"  # Angular frontend
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+      # Default filters applied to all routes
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddRequestHeader=X-Gateway-Name, api-gateway
+        - AddRequestHeader=X-Gateway-Version, 1.0.0
+
+      # Discovery client route locator
+      discovery:
+        locator:
+          enabled: false  # We're using programmatic routes instead
+          lower-case-service-id: true
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,gateway
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+  # Updated metrics configuration for Spring Boot 3.x
+  observations:
+    http:
+      server:
+        requests:
+          name: http.server.requests
+  prometheus:
+    metrics:
+      export:
+        step: 60s
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
+    com.ecommercehub.gateway: DEBUG
+    io.github.resilience4j: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+
+# Resilience4J Configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+        register-health-indicator: true
+    instances:
+      user-service-cb:
+        base-config: default
+      product-service-cb:
+        base-config: default
+        failure-rate-threshold: 70  # More lenient for product service
+
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 5s
+    instances:
+      user-service-cb:
+        base-config: default
+      product-service-cb:
+        base-config: default
+        timeout-duration: 10s  # Longer timeout for product service
