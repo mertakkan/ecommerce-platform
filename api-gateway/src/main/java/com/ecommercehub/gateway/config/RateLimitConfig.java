@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -20,7 +21,8 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 public class RateLimitConfig {
 
     /**
-     * Redis Rate Limiter with Token Bucket Algorithm
+     * Default Redis Rate Limiter with Token Bucket Algorithm
+     * Marked as @Primary to be auto-injected when no qualifier is specified
      * <p>
      * Constructor parameters:
      * - replenishRate: How many requests per second are allowed (tokens added per second)
@@ -28,6 +30,7 @@ public class RateLimitConfig {
      * - requestedTokens: How many tokens each request costs (default: 1)
      */
     @Bean
+    @Primary  // This tells Spring to use this bean by default
     public RedisRateLimiter defaultRateLimiter() {
         return new RedisRateLimiter(
                 10,   // replenishRate: 10 requests per second
@@ -71,6 +74,7 @@ public class RateLimitConfig {
             if (userId != null && !userId.isEmpty()) {
                 return reactor.core.publisher.Mono.just(userId);
             }
+            // Fallback to IP address if no user ID
             return reactor.core.publisher.Mono.just(
                     exchange.getRequest().getRemoteAddress().getAddress().getHostAddress()
             );
