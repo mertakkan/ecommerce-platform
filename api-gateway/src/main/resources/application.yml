@@ -46,7 +46,7 @@ spring:
 
       # Default filters applied to all routes
       default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin RETAIN_UNIQUE
         - AddRequestHeader=X-Gateway-Name, api-gateway
         - AddRequestHeader=X-Gateway-Version, 1.0.0
 
@@ -94,10 +94,10 @@ management:
 # Logging Configuration
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
-    com.ecommercehub.gateway: DEBUG
-    io.github.resilience4j: DEBUG
+    org.springframework.cloud.gateway: INFO
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: INFO
+    com.ecommercehub.gateway: INFO
+    io.github.resilience4j: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
 

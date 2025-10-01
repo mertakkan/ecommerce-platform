@@ -8,6 +8,8 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Global filter for logging incoming requests
@@ -21,13 +23,26 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
+        // Mask sensitive headers
+        Map<String, String> maskedHeaders = request.getHeaders().toSingleValueMap().entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> {
+                            String key = e.getKey();
+                            if ("authorization".equalsIgnoreCase(key) || "cookie".equalsIgnoreCase(key)) {
+                                return "***";
+                            }
+                            return e.getValue();
+                        }
+                ));
+
         // Log request details
         log.info("=== Incoming Request ===");
         log.info("Request ID: {}", request.getHeaders().getFirst("X-Gateway-Request-Id"));
         log.info("Method: {}", request.getMethod());
         log.info("URI: {}", request.getURI());
         log.info("Remote Address: {}", request.getRemoteAddress());
-        log.info("Headers: {}", request.getHeaders().toSingleValueMap());
+        log.info("Headers: {}", maskedHeaders);
 
         // Add request start time for performance monitoring
         exchange.getAttributes().put("startTime", System.currentTimeMillis());

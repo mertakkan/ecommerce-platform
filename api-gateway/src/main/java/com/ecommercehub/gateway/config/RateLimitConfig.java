@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -56,6 +57,33 @@ public class RateLimitConfig {
                 50,   // replenishRate: 50 requests per second
                 100,  // burstCapacity: up to 100 requests in burst
                 1     // requestedTokens: 1 token per request
+        );
+    }
+
+    /**
+     * Key resolver for user-based rate limiting.
+     * Prefers an explicit user ID header (e.g., set by auth), falls back to client IP.
+     */
+    @Bean
+    public KeyResolver userKeyResolver() {
+        return exchange -> {
+            String userId = exchange.getRequest().getHeaders().getFirst("X-User-ID");
+            if (userId != null && !userId.isEmpty()) {
+                return reactor.core.publisher.Mono.just(userId);
+            }
+            return reactor.core.publisher.Mono.just(
+                    exchange.getRequest().getRemoteAddress().getAddress().getHostAddress()
+            );
+        };
+    }
+
+    /**
+     * Key resolver for IP-based rate limiting.
+     */
+    @Bean
+    public KeyResolver ipKeyResolver() {
+        return exchange -> reactor.core.publisher.Mono.just(
+                exchange.getRequest().getRemoteAddress().getAddress().getHostAddress()
         );
     }
 
