@@ -65,30 +65,36 @@ public class RateLimitConfig {
 
     /**
      * Key resolver for user-based rate limiting.
+     * Marked as @Primary to be used by default.
      * Prefers an explicit user ID header (e.g., set by auth), falls back to client IP.
      */
     @Bean
+    @Primary  // Added @Primary here
     public KeyResolver userKeyResolver() {
         return exchange -> {
             String userId = exchange.getRequest().getHeaders().getFirst("X-User-ID");
             if (userId != null && !userId.isEmpty()) {
+                log.debug("Rate limiting by User ID: {}", userId);
                 return reactor.core.publisher.Mono.just(userId);
             }
             // Fallback to IP address if no user ID
-            return reactor.core.publisher.Mono.just(
-                    exchange.getRequest().getRemoteAddress().getAddress().getHostAddress()
-            );
+            String ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+            log.debug("Rate limiting by IP: {}", ip);
+            return reactor.core.publisher.Mono.just(ip);
         };
     }
 
     /**
      * Key resolver for IP-based rate limiting.
+     * Used explicitly where we want to limit by IP regardless of user authentication.
      */
     @Bean
     public KeyResolver ipKeyResolver() {
-        return exchange -> reactor.core.publisher.Mono.just(
-                exchange.getRequest().getRemoteAddress().getAddress().getHostAddress()
-        );
+        return exchange -> {
+            String ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+            log.debug("Rate limiting by IP only: {}", ip);
+            return reactor.core.publisher.Mono.just(ip);
+        };
     }
 
     /**
